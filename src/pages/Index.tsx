@@ -5,6 +5,7 @@ import FeaturedArticle from '@/components/blog/FeaturedArticle';
 import ArticleCard, { ArticleProps } from '@/components/blog/ArticleCard';
 import CategoryHighlight from '@/components/blog/CategoryHighlight';
 import Subscribe from '@/components/blog/Subscribe';
+import { useTheme } from '@/components/layout/ThemeProvider';
 
 // Sample data for demo purposes
 const featuredArticle: ArticleProps = {
@@ -93,6 +94,8 @@ const categories = [
 ];
 
 const Index = () => {
+  const { theme } = useTheme();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -100,20 +103,31 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow bg-gray-50">
+      <main className={
+        `flex-grow ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`
+      }>
         {/* Hero section */}
-        <section className="bg-white pt-8 pb-12">
+        <section className={
+          `${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} 
+          pt-8 pb-12`
+        }>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FeaturedArticle article={featuredArticle} />
           </div>
         </section>
-        
+
         {/* Recent Articles */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Artigos Recentes</h2>
-              <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
+              <h2 className={
+                `text-2xl md:text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`
+              }>
+                Artigos Recentes
+              </h2>
+              <p className={
+                `mt-3 text-lg max-w-2xl mx-auto ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`
+              }>
                 Fique por dentro das últimas novidades em educação e marketing digital
               </p>
             </div>
@@ -125,10 +139,10 @@ const Index = () => {
             </div>
           </div>
         </section>
-        
+
         {/* Categories */}
         <CategoryHighlight categories={categories} />
-        
+
         {/* Subscribe section */}
         <Subscribe />
       </main>

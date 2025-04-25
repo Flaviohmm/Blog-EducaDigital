@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Subscribe from '@/components/blog/Subscribe';
 import ArticleCard, { ArticleProps } from '@/components/blog/ArticleCard';
+import { useTheme } from '@/components/layout/ThemeProvider';
 
 // Sample data for demo
 const articles: ArticleProps[] = [
@@ -70,10 +71,11 @@ Os educadores que abraçarem essas ferramentas, enquanto mantêm um olhar críti
 
 const BlogArticle = () => {
   const { slug } = useParams<{ slug: string }>();
-  
+  const { theme } = useTheme();
+
   // Find the article based on slug (in a real app, this would be a DB fetch)
   const article = articles.find(a => a.slug === slug) || articles[0];
-  
+
   // Related articles (excluding the current one)
   const relatedArticles = articles.filter(a => a.id !== article.id).slice(0, 3);
 
@@ -84,12 +86,17 @@ const BlogArticle = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
-      <main className="flex-grow bg-white">
+
+      <main className={`
+        flex-grow ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`
+      }>
         {/* Article Header */}
-        <header className="bg-white pt-8 md:pt-12 pb-6">
+        <header className={
+          `${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} 
+          pt-8 pb-12`
+        }>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Link 
+            <Link
               to={`/category/${article.categorySlug}`}
               className="inline-block mb-4"
             >
@@ -98,16 +105,16 @@ const BlogArticle = () => {
               </Badge>
             </Link>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'} mb-4`}>
               {article.title}
             </h1>
-            
+
             <div className="flex flex-wrap items-center gap-4 text-gray-600 text-sm md:text-base">
               <div className="flex items-center">
                 <Calendar size={18} className="mr-1" />
                 <time dateTime={article.date}>{article.date}</time>
               </div>
-              
+
               <div className="flex items-center">
                 <Clock size={18} className="mr-1" />
                 <span>{article.readTime}</span>
@@ -115,25 +122,25 @@ const BlogArticle = () => {
             </div>
           </div>
         </header>
-        
+
         {/* Featured Image */}
-        <div className="w-full bg-gray-100 mb-8">
+        <div className={`w-full ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} mb-8`}>
           <div className="max-w-5xl mx-auto">
-            <img 
-              src={article.coverImage} 
-              alt={article.title} 
+            <img
+              src={article.coverImage}
+              alt={article.title}
               className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover"
             />
           </div>
         </div>
-        
+
         {/* Article Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <article className="prose prose-lg max-w-none">
             <p className="text-xl text-gray-700 font-medium mb-8">
               {article.excerpt}
             </p>
-            
+
             <div className="prose prose-lg prose-headings:text-gray-900 prose-a:text-blog-blue hover:prose-a:text-blog-darkBlue prose-img:rounded-lg">
               {/* This would normally be a rich text content from a CMS */}
               {articleContent.split('\n\n').map((paragraph, idx) => {
@@ -144,7 +151,7 @@ const BlogArticle = () => {
                 return <p key={idx} className="mb-4">{paragraph}</p>;
               })}
             </div>
-            
+
             {/* Tags */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex flex-wrap gap-2">
@@ -161,7 +168,7 @@ const BlogArticle = () => {
               </div>
             </div>
           </article>
-          
+
           {/* Share */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-lg font-semibold mb-3 flex items-center">
@@ -181,11 +188,11 @@ const BlogArticle = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Related Articles */}
-        <div className="bg-gray-50 py-12">
+        <div className={`${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}  py-12`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Artigos Relacionados</h2>
+            <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'} mb-8`}>Artigos Relacionados</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedArticles.map((relArticle) => (
                 <ArticleCard key={relArticle.id} article={relArticle} />
@@ -193,7 +200,7 @@ const BlogArticle = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Subscribe section */}
         <Subscribe />
       </main>
