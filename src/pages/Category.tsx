@@ -4,9 +4,10 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ArticleCard, { ArticleProps } from '@/components/blog/ArticleCard';
 import Subscribe from '@/components/blog/Subscribe';
+import { useTheme } from '@/components/layout/ThemeProvider';
 
 // Sample data
-const articlesData: Record<string, {title: string, description: string, articles: ArticleProps[]}> = {
+const articlesData: Record<string, { title: string, description: string, articles: ArticleProps[] }> = {
   'educacao': {
     title: 'Educação',
     description: 'Artigos sobre tendências, metodologias e tecnologias transformando o ensino e aprendizagem.',
@@ -89,14 +90,15 @@ const articlesData: Record<string, {title: string, description: string, articles
 
 const Category = () => {
   const { slug } = useParams<{ slug: string }>();
-  
-  const categoryData = slug && articlesData[slug] 
-    ? articlesData[slug] 
+  const { theme } = useTheme();
+
+  const categoryData = slug && articlesData[slug]
+    ? articlesData[slug]
     : {
-        title: 'Categoria', 
-        description: 'Artigos desta categoria', 
-        articles: []
-      };
+      title: 'Categoria',
+      description: 'Artigos desta categoria',
+      articles: []
+    };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -105,10 +107,12 @@ const Category = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
-      <main className="flex-grow bg-gray-50">
+
+      <main className={`
+        flex-grow ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}
+      `}>
         {/* Category Header */}
-        <header className="bg-blog-blue text-white py-12 md:py-16">
+        <header className={`${theme === 'dark' ? 'bg-blue-900' : 'bg-blog-blue'} text-white py-12 md:py-16`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{categoryData.title}</h1>
             <p className="text-lg text-blue-100 max-w-3xl mx-auto">
@@ -116,7 +120,7 @@ const Category = () => {
             </p>
           </div>
         </header>
-        
+
         {/* Articles */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,7 +129,7 @@ const Category = () => {
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
-            
+
             {categoryData.articles.length === 0 && (
               <div className="text-center py-12">
                 <h2 className="text-xl text-gray-600">Nenhum artigo encontrado nesta categoria.</h2>
@@ -133,7 +137,7 @@ const Category = () => {
             )}
           </div>
         </section>
-        
+
         {/* Subscribe section */}
         <Subscribe />
       </main>
